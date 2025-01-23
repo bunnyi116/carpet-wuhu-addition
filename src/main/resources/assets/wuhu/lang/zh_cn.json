@@ -16,5 +16,6 @@
   "carpet.rule.autoMending.name": "自动经验修补",
   "carpet.rule.autoMending.desc": "装备或手上有耐久不满物品且有经验修补附魔时会自动消耗已有经验值进行经验修补",
   "carpet.rule.commandSearch.name": "搜索carpet命令",
-  "carpet.rule.commandSearch.desc": "根据翻译搜索,搜索范围默认参数为1\n1：名称翻译\n2：功能介绍翻译"
+  "carpet.rule.commandSearch.desc": "根据翻译搜索,搜索范围默认参数为1\n1：名称翻译\n2：功能介绍翻译",
+  "carpet.commands.commandSearch.backMessage": "Carpet Mod中符合“%s”的选项：:"
 }

@@ -9,7 +9,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.zxy.carpet_wh_addition.config.CarpetWuHuSettings;
+import com.zxy.carpet_wh_addition.config.Translate;
 import com.zxy.carpet_wh_addition.mixin.setting.SettingsManagerAccessor;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.MutableText;
@@ -20,6 +22,7 @@ import java.util.List;
 //#if MC > 11802
 import carpet.api.settings.RuleHelper;
 import carpet.utils.CommandHelper;
+import net.minecraft.text.TranslatableTextContent;
 //#else
 
 //#endif
@@ -49,7 +52,8 @@ public class RuleSearchCommand {
             return 0;
         }
         List<CarpetRule<?>> list = CarpetServer.settingsManager.getCarpetRules().stream().toList();
-        MutableText text = Text.translatableWithFallback("carpet.commands.ruleSearch.feedback", rule);
+        String str = "carpet.commands.commandSearch.backMessage";
+        MutableText text = Text.translatableWithFallback(str, Translate.getTranslate().get(str),rule);
         // 将文本设置为粗体
         text.styled(style -> style.withBold(true));
         context.getSource().sendFeedback(
@@ -73,12 +77,14 @@ public class RuleSearchCommand {
                                 ((SettingsManagerAccessor) CarpetServer.settingsManager).displayInteractiveSettings(carpet));
                         ruleCount++;
                     }
+                    break;
                 case 2:
                     if (RuleHelper.translatedDescription(carpet).contains(rule)) {
                         Messenger.m(context.getSource(),
                                 ((SettingsManagerAccessor) CarpetServer.settingsManager).displayInteractiveSettings(carpet));
                         ruleCount++;
                     }
+                    break;
                 case 3:
 //                    if (RuleHelper.translatedName(carpet).contains(rule)) {
 //                        Messenger.m(context.getSource(),

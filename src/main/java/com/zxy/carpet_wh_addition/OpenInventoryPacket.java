@@ -185,16 +185,7 @@ public class OpenInventoryPacket {
         playerlist.add(player);
         if (blockState == null) return;
         tickMap.put(player, new TickList(blockState.getBlock(), world, pos, blockState));
-        BlockEntity blockEntity = world.getBlockEntity(pos);
-        boolean isInv = isContainer(blockEntity);
-
-        if (!isInv || blockState.isAir() || (blockEntity instanceof ShulkerBoxBlockEntity entity &&
-                //#if MC > 12004
-                !world.isSpaceEmpty(ShulkerEntity.calculateBoundingBox(1.0f,blockState.get(FACING),  0.0f,0.5f).offset(pos).contract(1.0E-6)) &&
-                //#else
-                //$$ !world.isSpaceEmpty(ShulkerEntity.calculateBoundingBox(blockState.get(FACING), 0.0f, 0.5f).offset(pos).contract(1.0E-6)) &&
-                //#endif
-                entity.getAnimationStage() == ShulkerBoxBlockEntity.AnimationStage.CLOSED)) {
+        if (!canOpenInv(world,pos)) {
             System.out.println("openFail" + pos);
             openReturn(player, blockState, false);
             return;
@@ -242,5 +233,34 @@ public class OpenInventoryPacket {
 //                type == BlockEntityType.CRAFTER
 //                //#endif
 //                ;
+    }
+
+    public static boolean canOpenInv(World world, BlockPos pos){
+        if (world != null) {
+            BlockState blockState = world.getBlockState(pos);
+            BlockEntity blockEntity = world.getBlockEntity(pos);
+            boolean isInventory = isContainer(blockEntity);
+            try {
+                if ((isInventory && blockState.createScreenHandlerFactory(world,pos) == null) ||
+                        (blockEntity instanceof ShulkerBoxBlockEntity entity &&
+                                //#if MC > 12101
+                                //$$ !world.isSpaceEmpty(ShulkerEntity.calculateBoundingBox(1.0F, blockState.get(FACING), 0.0F, 0.5F, pos.toBottomCenterPos()).offset(pos).contract(1.0E-6)) &&
+                                //#elseif MC <= 12101 && MC > 12004
+                                !world.isSpaceEmpty(ShulkerEntity.calculateBoundingBox(1.0F, blockState.get(FACING), 0.0F, 0.5F).offset(pos).contract(1.0E-6)) &&
+                                //#elseif MC <= 12004
+                                //$$ !world.isSpaceEmpty(ShulkerEntity.calculateBoundingBox(blockState.get(FACING), 0.0f, 0.5f).offset(pos).contract(1.0E-6)) &&
+                                //#endif
+                                entity.getAnimationStage() == ShulkerBoxBlockEntity.AnimationStage.CLOSED)) {
+                    return false;
+                }else if(!isInventory){
+                    return false;
+                }
+            } catch (Exception e) {
+                return false;
+            }
+            return true;
+        }else {
+            return false;
+        }
     }
 }

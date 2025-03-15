@@ -38,7 +38,7 @@ public interface SettingsManagerAccessor {
     @Invoker("displayInteractiveSetting")
     Text displayInteractiveSettings(CarpetRule<?> rule);
     //#else
-
+    //$$
     //#endif
     
 

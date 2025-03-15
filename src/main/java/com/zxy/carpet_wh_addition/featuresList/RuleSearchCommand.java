@@ -24,7 +24,7 @@ import carpet.api.settings.RuleHelper;
 import carpet.utils.CommandHelper;
 import net.minecraft.text.TranslatableTextContent;
 //#else
-
+//$$
 //#endif
 
 public class RuleSearchCommand {
@@ -104,6 +104,6 @@ public class RuleSearchCommand {
     //$$ public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
     //$$
     //$$ }
-
+    //$$
     //#endif
 }

@@ -10,9 +10,9 @@ public class CarpetWuHuSettings {
     //无限无需箭
     @Rule(categories = WUHU)
     public static boolean infiniteNotRequireArrows = false;
-    //盔甲架无视潜影贝子弹
+    //盔甲架和船无视潜影贝子弹
     @Rule(categories = WUHU)
-    public static boolean armorStandIgnoredShulkerBullet = false;
+    public static boolean armorOrBoatStandIgnoredShulkerBullet = false;
     //更新野生龙龙战数据
     @Rule(categories = WUHU)
     public static boolean dragonsDropMoreExperience = false;

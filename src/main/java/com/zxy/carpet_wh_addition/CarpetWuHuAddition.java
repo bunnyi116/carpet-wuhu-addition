@@ -22,7 +22,6 @@ public class CarpetWuHuAddition implements CarpetExtension , ModInitializer {
 
     public static final Logger LOGGER = LogManager.getLogger("CarpetWuHuAddition");
     public static final String MOD_NAME_LOWER_CASE = "carpetwuhuaddition";
-    public static MinecraftServer minecraftServer;
     public static boolean loadPrinter = isLoadMod("litematica-printer");
     public static boolean isLoadMod(String modId){
         return FabricLoader.getInstance().isModLoaded(modId);

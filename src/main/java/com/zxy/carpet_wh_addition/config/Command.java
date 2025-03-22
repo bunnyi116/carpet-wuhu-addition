@@ -21,15 +21,9 @@ public class Command {
     public static void register(CommandDispatcher<ServerCommandSource> dispatcher) {
 
         RuleSearchCommand.register(dispatcher);
-//        dispatcher.register(
-//                CommandManager.literal("search")
-//                        .then(CommandManager.argument("搜索等级", IntegerArgumentType.integer(1, 10))
-//                                .then(getTheContent()))
-//                        .then(getTheContent())
-//        );
 
         List<LiteralArgumentBuilder<ServerCommandSource>> commands = List.of(
-                //手长修改 已修更改carpet选项
+                //手长修改 已被carpet接管
 //                literal("remote_interaction")
 //                .requires(source -> source.hasPermissionLevel(2)) // 2 表示 OP 权限
 //                        .then(CommandManager.argument("mode", StringArgumentType.string())
@@ -43,26 +37,6 @@ public class Command {
             dispatcher.register(command);
         }
     }
-//    private static RequiredArgumentBuilder<ServerCommandSource, String> getTheContent(){
-//        return CommandManager.argument("消息", StringArgumentType.greedyString())
-//                .executes(context -> {
-//                    String message = StringArgumentType.getString(context, "消息");
-//                    int count = IntegerArgumentType.getInteger(context, "次数");
-//                    boolean active = BoolArgumentType.getBool(context, "激活");
-//
-//                    // 根据激活标志输出不同内容
-//                    for (int i = 0; i < count; i++) {
-//                        String outputMessage = active ? "激活状态: " + message : "非激活状态: " + message;
-//                        context.getSource().sendFeedback(
-//                                //#if MC > 11904
-//                                (Supplier<Text>)
-//                                        //#else
-//                                        //#endif
-//                                        Text.of("第 " + (i + 1) + " 次消息: " + outputMessage), false);
-//                    }
-//                    return com.mojang.brigadier.Command.SINGLE_SUCCESS;
-//                });
-//    }
 
     private static int execute(ServerCommandSource source, String str, double num) {
         //#if MC > 11802

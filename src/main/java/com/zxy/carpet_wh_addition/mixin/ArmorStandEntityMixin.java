@@ -33,7 +33,7 @@ public class ArmorStandEntityMixin {
     @Inject(at = @At("HEAD"), method = "damage", cancellable = true)
     //#if MC < 12104
     //$$ public void damage(DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
-
+    //$$
     //#else
     public void damage(ServerWorld world, DamageSource source, float amount, CallbackInfoReturnable<Boolean> cir) {
     //#endif

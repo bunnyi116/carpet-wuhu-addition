@@ -34,7 +34,7 @@ public class AutoMending {
         if (optional.isPresent()) {
             //#if MC > 12006
             ItemStack itemStack = optional.get().stack();
-            int i = EnchantmentHelper.getRepairWithExperience(player.getServerWorld(), itemStack, amount);
+            int i = EnchantmentHelper.getRepairWithExperience(player.getWorld(), itemStack, amount);
             //#else
             //$$ int i = amount * 2;
             //$$ ItemStack itemStack = optional.get();

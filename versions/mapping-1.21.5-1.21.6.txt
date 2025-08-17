@@ -1,0 +1,2 @@
+net.minecraft.server.network.ServerPlayerEntity server getServer()
+net.minecraft.server.network.ServerPlayerEntity getServerWorld() getWorld()

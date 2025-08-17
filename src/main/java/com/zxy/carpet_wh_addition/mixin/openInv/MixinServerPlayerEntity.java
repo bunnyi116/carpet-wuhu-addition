@@ -7,9 +7,11 @@ import com.zxy.carpet_wh_addition.TickList;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.screen.ScreenHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.world.ServerWorld;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -23,11 +25,7 @@ import static com.zxy.carpet_wh_addition.OpenInventoryPacket.tickMap;
 import static com.zxy.carpet_wh_addition.featuresList.AutoMending.mending;
 
 @Mixin(ServerPlayerEntity.class)
-public abstract class MixinServerPlayerEntity extends PlayerEntity{
-
-    public MixinServerPlayerEntity(World world, BlockPos pos, float yaw, GameProfile profile) {
-        super(world, pos, yaw, profile);
-    }
+public abstract class MixinServerPlayerEntity{
     @Inject(at = @At("HEAD"), method = "onDisconnect")
     public void onDisconnect(CallbackInfo ci) {
         deletePlayerList();
@@ -42,8 +40,8 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity{
     }
     @Unique
     private void deletePlayerList(){
-        playerlist.removeIf(player -> player.getUuid().equals(getUuid()));
-        tickMap.entrySet().removeIf(k -> k.getKey().getUuid().equals(getUuid()));
+        playerlist.removeIf(player -> player.getUuid().equals( ((ServerPlayerEntity)(Object)this).getUuid()));
+        tickMap.entrySet().removeIf(k -> k.getKey().getUuid().equals(((ServerPlayerEntity)(Object)this).getUuid()));
 //        List<Map.Entry<ServerPlayerEntity, TickList>> list = tickMap.entrySet().stream().filter(k -> k.getKey().getUuid().equals(getUuid())).toList();
 //        for (Map.Entry<ServerPlayerEntity, TickList> serverPlayerEntityTickListEntry : list) {
 //            tickMap.remove(serverPlayerEntityTickListEntry.getKey());
@@ -60,7 +58,7 @@ public abstract class MixinServerPlayerEntity extends PlayerEntity{
     }
     @Inject(at = @At("TAIL"),method = "tick")
     public void tick(CallbackInfo ci){
-        if (this.getWorld().getTime() % 20 == 0) {
+        if (((ServerPlayerEntity)(Object)this).getWorld().getTime() % 20 == 0) {
             mending((ServerPlayerEntity) (Object)this);
         }
     }

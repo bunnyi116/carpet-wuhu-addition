@@ -53,8 +53,8 @@ configurations {
 		}
 	}
 
-	register("productionRuntimeServer")
-	register("productionRuntimeMods")
+//	register("productionRuntimeServer")
+//	register("productionRuntimeMods")
 }
 //  1 = modImplementation 2 = modImplementation include 	3 = modApi	4 = modCompileOnly
 // Module, Property prefix, Resolve condition, Transitive depende ncies.
@@ -145,9 +145,9 @@ loom {
 	runClient {
 		defaultCharacterEncoding("UTF-8")
 
-		if (!new File("${projectDir}/run/client/options.txt").exists()) {
-			new File("${projectDir}/run/client").mkdirs()
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/client/options.txt"))
+		if (!new File("${project.projectDir}/run/client/options.txt").exists()) {
+			new File("${project.projectDir}/run/client").mkdirs()
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${project.projectDir}/run/client/options.txt"))
 			bufferedWriter.writeLine("autoJump:false")
 			bufferedWriter.writeLine("enableVsync:false")
 			bufferedWriter.writeLine("forceUnicodeFont:false")
@@ -168,9 +168,9 @@ loom {
 		defaultCharacterEncoding("UTF-8")
 
 		// Agree eula before server init.
-		if (!new File("${projectDir}/run/server/eula.txt").exists()) {
-			new File("${projectDir}/run/server").mkdirs()
-			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${projectDir}/run/server/eula.txt"))
+		if (!new File("${project.projectDir}/run/server/eula.txt").exists()) {
+			new File("${project.projectDir}/run/server").mkdirs()
+			BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("${project.projectDir}/run/server/eula.txt"))
 			bufferedWriter.writeLine("eula=true")
 			bufferedWriter.close()
 		}
@@ -186,7 +186,7 @@ tasks.register("serverPropertiesJar", Jar) {
 		}
 
 		BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(propsFile))
-		bufferedWriter.writeLine("fabric-loader-version=${project.fabric_loader_version}")
+		bufferedWriter.writeLine("fabric-loader-version=${project.loader_version}")
 		bufferedWriter.writeLine("game-version=${project.minecraft_version}")
 		bufferedWriter.close()
 	}
@@ -234,25 +234,13 @@ tasks.register("runProductionServer", JavaExec) {
 	}
 }
 
-["serverPropertiesJar",
- "runClient"          , "runServer",
- "runMixinAuditClient", "runMixinAuditServer",
- "runProductionClient", "runProductionServer",
- "preprocessCode"     , "preprocessResources",
- "preprocessTestCode" , "preprocessTestResources"].forEach {
-	if (tasks.getNames().contains(it)) {
-		tasks.named(it) {
-			it.group("${mod_id}")
-		}
-	}
-}
 
 tasks.withType(JavaCompile).configureEach {
 	options.encoding("UTF-8")
 }
 
 remapJar {
-	remapperIsolation.set(true)
+//	remapperIsolation.set(true)
 }
 
 

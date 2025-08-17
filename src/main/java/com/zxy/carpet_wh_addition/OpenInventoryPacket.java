@@ -47,8 +47,11 @@ import net.minecraft.registry.RegistryKeys;
 //$$ import net.minecraft.util.registry.Registry;
 //#endif
 public class OpenInventoryPacket {
-    private static final ChunkTicketType<ChunkPos> OPEN_TICKET =
-            ChunkTicketType.create("openInv", Comparator.comparingLong(ChunkPos::toLong), 2);
+    //#if MC > 12104
+    private static final ChunkTicketType OPEN_TICKET = ChunkTicketType.UNKNOWN;
+    //#else
+    //$$ private static final ChunkTicketType<ChunkPos> OPEN_TICKET = ChunkTicketType.create("openInv", Comparator.comparingLong(ChunkPos::toLong), 2);
+    //#endif
     public static HashMap<ServerPlayerEntity, TickList> tickMap = new HashMap<>();
 
     //#if MC > 12006
@@ -147,8 +150,8 @@ public class OpenInventoryPacket {
         //#if MC > 12004
         ServerPlayNetworking.registerGlobalReceiver(OpenPackage.OPEN_INVENTORY_ID, (payload,context) -> {
             if (payload instanceof OpenPackage packetByteBuf) {
-                context.player().server.execute(() -> {
-                    openInv(context.player().server, context.player(), packetByteBuf.pos, packetByteBuf.world);
+                context.player().getServer().execute(() -> {
+                    openInv(context.player().getServer(), context.player(), packetByteBuf.pos, packetByteBuf.world);
                 });
             }
         });
@@ -180,13 +183,17 @@ public class OpenInventoryPacket {
         if (world == null) return;
         BlockState blockState = world.getBlockState(pos);
         if (blockState == null) {
-            world.getChunkManager().addTicket(OPEN_TICKET, new ChunkPos(pos), 2, new ChunkPos(pos));
+            //#if MC > 12104
+            world.getChunkManager().addTicket(OPEN_TICKET, new ChunkPos(pos), 2);
+            //#else
+            //$$ world.getChunkManager().addTicket(OPEN_TICKET, new ChunkPos(pos), 2, new ChunkPos(pos));
+            //#endif
         }
         playerlist.add(player);
         if (blockState == null) return;
         tickMap.put(player, new TickList(blockState.getBlock(), world, pos, blockState));
         if (!canOpenInv(world,pos)) {
-            System.out.println("openFail" + pos);
+            System.out.println("openFail  " + pos);
             openReturn(player, blockState, false);
             return;
         }
@@ -202,7 +209,7 @@ public class OpenInventoryPacket {
             && !r.equals(ActionResult.SUCCESS)
             //#endif
         )) {
-            System.out.println("openFail" + pos);
+            System.out.println("openFail  " + pos);
             openReturn(player, blockState, false);
             return;
         }

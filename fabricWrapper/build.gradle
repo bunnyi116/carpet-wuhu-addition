@@ -93,21 +93,3 @@ java {
     sourceCompatibility(JavaVersion.VERSION_1_8)
     targetCompatibility(JavaVersion.VERSION_1_8)
 }
-
-publishing {
-    publications {
-        register("mavenJava", MavenPublication) {
-            artifactId("${project.mod_id}")
-            version("${rootProject.getMavenArtifactVersion()}")
-            from(components.java)
-        }
-    }
-
-    repositories {
-        mavenLocal()
-
-        maven {
-            url("$rootDir/publish")
-        }
-    }
-}

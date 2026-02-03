@@ -58,16 +58,7 @@ configurations {
 }
 
 loom {
-    interfaceInjection {
-        enableDependencyInterfaceInjection.set(true)
-    }
-
     def commonVmArgs = ['-Dmagiclib.mixin_audit=true', '-Dmixin.debug.export=true', '-Dmixin.debug.countInjections=true']
-    runConfigs.configureEach {
-        // Dump modified classes automatically.
-        property("mixin.debug.export", "true")
-    }
-
     runConfigs.named("client") {
         programArgs(["--width", "1280", "--height", "720",])
         vmArgs commonVmArgs
@@ -80,40 +71,6 @@ loom {
         ideConfigGenerated = true
         runDir("../../run/server")
     }
-
-    runClient {
-        defaultCharacterEncoding("UTF-8")
-
-        if (!new File("../../run/client/options.txt").exists()) {
-            new File("../../run/client").mkdirs()
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("../../run/client/options.txt"))
-            bufferedWriter.writeLine("autoJump:false")
-            bufferedWriter.writeLine("enableVsync:false")
-            bufferedWriter.writeLine("forceUnicodeFont:false")
-            bufferedWriter.writeLine("fov:0.25")
-            bufferedWriter.writeLine("screenEffectScale:1.0")
-            bufferedWriter.writeLine("gamma:16.0")
-            bufferedWriter.writeLine("guiScale:3")
-            bufferedWriter.writeLine("lang:${Locale.getDefault().toString()}")
-            bufferedWriter.writeLine("maxFps:260")
-            bufferedWriter.writeLine("renderDistance:10")
-            bufferedWriter.writeLine("soundCategory_master:0.0")
-            bufferedWriter.close()
-        }
-    }
-
-    // Setup server default settings.
-    runServer {
-        defaultCharacterEncoding("UTF-8")
-
-        // Agree eula before server init.
-        if (!new File("../../run/server/eula.txt").exists()) {
-            new File("../../run/server").mkdirs()
-            BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter("../../run/server/eula.txt"))
-            bufferedWriter.writeLine("eula=true")
-            bufferedWriter.close()
-        }
-    }
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -121,60 +78,47 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 def MIXIN_CONFIG_PATHS = ['carpet-wuhu.mixins.json']
-JavaVersion JAVA_COMPATIBILITY
+JavaVersion javaVersion
 if (mcVersion >= 12005) {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_21
+    javaVersion = JavaVersion.VERSION_21
 } else if (mcVersion >= 11800) {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_17
+    javaVersion = JavaVersion.VERSION_17
 } else if (mcVersion >= 11700) {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_16
+    javaVersion = JavaVersion.VERSION_16
 } else {
-    JAVA_COMPATIBILITY = JavaVersion.VERSION_1_8
+    javaVersion = JavaVersion.VERSION_1_8
 }
-JavaVersion MIXIN_COMPATIBILITY_LEVEL = JAVA_COMPATIBILITY
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = "UTF-8"
     options.compilerArgs << "-Xlint:deprecation" << "-Xlint:unchecked"
-    if (JAVA_COMPATIBILITY <= JavaVersion.VERSION_1_8) {
+    if (javaVersion <= JavaVersion.VERSION_1_8) {
         // suppressed "source/target value 8 is obsolete and will be removed in a future release"
         options.compilerArgs << '-Xlint:-options'
     }
 }
+
 java {
-    sourceCompatibility = JAVA_COMPATIBILITY
-    targetCompatibility = JAVA_COMPATIBILITY
+    sourceCompatibility = javaVersion
+    targetCompatibility = javaVersion
 }
 
 processResources {
-    outputs.upToDateWhen { false }
-
-    from("${rootDir}/LICENSE")
-    from("${rootDir}/icon.png") {
-        into("assets/${project.mod_id}")
-    }
-
+    def modProperties = [
+            "minecraft_dependency": project.minecraft_dependency,
+            "minecraft_version_id": project.minecraft_version.replace(".", "_"),
+            "minecraft_version"   : project.minecraft_version,
+            "mod_description"     : project.mod_description,
+            "mod_homepage"        : project.mod_homepage,
+            "mod_id"              : project.mod_id,
+            "mod_license"         : project.mod_license,
+            "mod_name"            : project.mod_name,
+            "mod_sources"         : project.mod_sources,
+            "mod_version"         : project.version,
+            "compatibility_level" : "JAVA_$javaVersion.majorVersion"
+    ]
+    inputs.properties(modProperties)
     filesMatching("fabric.mod.json") {
-        filter { line ->
-            line.trim().startsWith("//") ? null : line
-        }
-        expand([
-                "minecraft_dependency": project.minecraft_dependency,
-                "minecraft_version_id": project.minecraft_version.replace(".", "_"),
-                "minecraft_version"   : project.minecraft_version,
-                "mod_description"     : project.mod_description,
-                "mod_homepage"        : project.mod_homepage,
-                "mod_id"              : project.mod_id,
-                "mod_license"         : project.mod_license,
-                "mod_name"            : project.mod_name,
-                "mod_sources"         : project.mod_sources,
-                "mod_version"         : project.version
-        ])
-    }
-
-    MIXIN_CONFIG_PATHS.each { mixinConfigPath ->
-        filesMatching(mixinConfigPath) {
-            filter { s -> s.replace('{{COMPATIBILITY_LEVEL}}', "JAVA_${MIXIN_COMPATIBILITY_LEVEL.ordinal() + 1}") }
-        }
+        expand modProperties
     }
 }

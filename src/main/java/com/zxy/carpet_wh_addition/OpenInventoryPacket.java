@@ -68,7 +68,7 @@ public class OpenInventoryPacket {
     //#if MC > 12004
     public static class OpenPackage implements CustomPayload{
        public static final Id<OpenPackage> OPEN_INVENTORY_ID = new Id<>(OPEN_INVENTORY);
-       public static final PacketCodec<RegistryByteBuf,OpenPackage> CODEC = new PacketCodec<>() {
+       public static final PacketCodec<RegistryByteBuf,OpenPackage> CODEC = new PacketCodec<RegistryByteBuf,OpenPackage>() {
 
            @Override
            public void encode(RegistryByteBuf buf, OpenPackage value) {
@@ -95,7 +95,7 @@ public class OpenInventoryPacket {
 
     public static class HelloPackage implements CustomPayload{
         public static final Id<HelloPackage> HELLO_REMOTE_INTERACTIONS_ID = new Id<>(HELLO_REMOTE_INTERACTIONS);
-        public static final PacketCodec<RegistryByteBuf,HelloPackage> CODEC = new PacketCodec<>() {
+        public static final PacketCodec<RegistryByteBuf,HelloPackage> CODEC = new PacketCodec<RegistryByteBuf,HelloPackage>() {
             @Override
             public void encode(RegistryByteBuf buf, HelloPackage value) {
             }
@@ -113,7 +113,7 @@ public class OpenInventoryPacket {
         BlockState state = null;
         boolean isOpen = false;
         public static final Id<ReturnPackage> OPEN_RETURN_ID = new Id<>(OPEN_RETURN);
-        public static final PacketCodec<RegistryByteBuf,ReturnPackage> CODEC = new PacketCodec<>() {
+        public static final PacketCodec<RegistryByteBuf,ReturnPackage> CODEC = new PacketCodec<RegistryByteBuf,ReturnPackage>() {
             @Override
             public void encode(RegistryByteBuf buf, ReturnPackage value) {
                 buf.writeInt(Block.getRawIdFromState(value.state));

@@ -20,10 +20,32 @@
 
 package com.zxy.carpet_wh_addition.mixin.setting;
 
-
-import com.zxy.carpet_wh_addition.config.DummyClass;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
 
-@Mixin(DummyClass.class)
+//#if MC <= 11802
+//$$ import carpet.settings.ParsedRule;
+//$$ import carpet.settings.Rule;
+//$$ import carpet.settings.SettingsManager;
+//$$ import java.lang.reflect.Field;
+//#endif
+
+//#if MC > 11802
+@Mixin(com.zxy.carpet_wh_addition.config.DummyClass.class)
 public interface ParsedRuleAccessor {
 }
+//#else
+//$$ @Mixin(ParsedRule.class)
+//$$ public interface ParsedRuleAccessor {
+//$$     @SuppressWarnings("rawtypes")
+//$$     @Invoker(value = "<init>", remap = false)
+//$$     static ParsedRule invokeConstructor(Field field, Rule rule, SettingsManager settingsManager
+//$$                                         //#if MC >= 11600
+//$$                                         //$$ , carpet.settings.SettingsManager settingsManager
+//$$                                         //#endif
+//$$     )
+//$$     {
+//$$         throw new RuntimeException();
+//$$     }
+//$$ }
+//#endif

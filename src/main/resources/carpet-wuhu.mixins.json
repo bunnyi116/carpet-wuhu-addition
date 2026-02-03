@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.zxy.carpet_wh_addition.mixin",
-  "compatibilityLevel": "{{COMPATIBILITY_LEVEL}}",
+  "compatibilityLevel": "${compatibility_level}",
   "mixins": [
     "AnvilScreenHandlerMixin",
     "ArmorStandEntityMixin",

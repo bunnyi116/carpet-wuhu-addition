@@ -30,7 +30,7 @@ import com.zxy.carpet_wh_addition.mixin.setting.ParsedRuleAccessor;
 import com.zxy.carpet_wh_addition.mixin.setting.SettingsManagerAccessor;
 
 
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;

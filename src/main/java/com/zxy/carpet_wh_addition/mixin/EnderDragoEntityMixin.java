@@ -37,7 +37,7 @@ public class EnderDragoEntityMixin extends MobEntity{
     private void test(CallbackInfo ci) {
         EnderDragonFight fight1 = fight;
         World world = this.getWorld();
-        if(fight1 == null && dragonsDropMoreExperience && !world.isClient){
+        if(fight1 == null && dragonsDropMoreExperience && !world.isClient()){
             fight = ((ServerWorld) world).getEnderDragonFight();
         }
     }

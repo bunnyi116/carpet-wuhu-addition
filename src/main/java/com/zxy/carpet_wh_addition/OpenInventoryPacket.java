@@ -1,5 +1,6 @@
 package com.zxy.carpet_wh_addition;
 
+import com.zxy.carpet_wh_addition.util.IdentifierUtils;
 import io.netty.buffer.Unpooled;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.block.BlockState;
@@ -54,15 +55,9 @@ public class OpenInventoryPacket {
     //#endif
     public static HashMap<ServerPlayerEntity, TickList> tickMap = new HashMap<>();
 
-    //#if MC > 12006
-    private static final Identifier OPEN_INVENTORY = Identifier.of("remoteinventory", "open_inventory");
-    private static final Identifier OPEN_RETURN = Identifier.of("openreturn", "open_return");
-    private static final Identifier HELLO_REMOTE_INTERACTIONS = Identifier.of("hello", "hello_remote_interactions");
-    //#else
-    //$$ private static final Identifier OPEN_INVENTORY = new Identifier("remoteinventory", "open_inventory");
-    //$$ private static final Identifier OPEN_RETURN = new Identifier("openreturn", "open_return");
-    //$$ private static final Identifier HELLO_REMOTE_INTERACTIONS = new Identifier("hello", "hello_remote_interactions");
-    //#endif
+    private static final Identifier OPEN_INVENTORY = IdentifierUtils.of("remoteinventory", "open_inventory");
+    private static final Identifier OPEN_RETURN = IdentifierUtils.of("openreturn", "open_return");
+    private static final Identifier HELLO_REMOTE_INTERACTIONS = IdentifierUtils.of("hello", "hello_remote_interactions");
     public static ArrayList<ServerPlayerEntity> playerlist = new ArrayList<>();
 
     //#if MC > 12004
@@ -150,9 +145,8 @@ public class OpenInventoryPacket {
         //#if MC > 12004
         ServerPlayNetworking.registerGlobalReceiver(OpenPackage.OPEN_INVENTORY_ID, (payload,context) -> {
             if (payload instanceof OpenPackage packetByteBuf) {
-                context.player().getServer().execute(() -> {
-                    openInv(context.player().getServer(), context.player(), packetByteBuf.pos, packetByteBuf.world);
-                });
+                MinecraftServer server =  context.player().getWorld().getServer();
+                server.execute(() -> openInv(server, context.player(), packetByteBuf.pos, packetByteBuf.world));
             }
         });
         //#else

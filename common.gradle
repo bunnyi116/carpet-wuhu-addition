@@ -77,7 +77,6 @@ tasks.withType(JavaCompile).configureEach {
     options.encoding("UTF-8")
 }
 
-def MIXIN_CONFIG_PATHS = ['carpet-wuhu.mixins.json']
 JavaVersion javaVersion
 if (mcVersion >= 12005) {
     javaVersion = JavaVersion.VERSION_21
@@ -118,7 +117,7 @@ processResources {
             "compatibility_level" : "JAVA_$javaVersion.majorVersion"
     ]
     inputs.properties(modProperties)
-    filesMatching("fabric.mod.json") {
+    filesMatching(["fabric.mod.json", "*.mixins.json"]) {
         expand modProperties
     }
 }

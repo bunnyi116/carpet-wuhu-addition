@@ -84,4 +84,4 @@ $RECYCLE.BIN/
 # 环境变量文件 (敏感配置忽略，保留示例文件)
 .env
 .env.*
-!.env.example
+!.env.example!/run/
